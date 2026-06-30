@@ -208,13 +208,28 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
   }
 
   function touchWater(px: number, py: number, big: boolean) {
+    if (px < 0 || py < 0 || px > width || py > height) return
+
     const gx = (px / width) * nx
     const gy = (py / height) * ny
 
     if (big) {
       drop(gx, gy, 6, 2.2 * params.clickRipple)
     } else {
-      drop(gx, gy, 2.4, 0.45 * params.moveRipple)
+      drop(gx, gy, 2.8, 0.75 * params.moveRipple)
+    }
+  }
+
+  function touchWaterLine(x0: number, y0: number, x1: number, y1: number) {
+    const dist = Math.hypot(x1 - x0, y1 - y0)
+    if (dist <= 1) return
+
+    const step = Math.max(4, Math.min(width, height) / 120)
+    const count = Math.max(1, Math.ceil(dist / step))
+
+    for (let i = 1; i <= count; i++) {
+      const t = i / count
+      touchWater(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, false)
     }
   }
 
@@ -229,18 +244,40 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
     gl.uniform2f(uniforms.uTexel, 1 / nx, 1 / ny)
   }
 
-  function onPointerMove(event: PointerEvent) {
+  function movePointer(x: number, y: number) {
     if (lastPointerX >= 0) {
-      const dist = Math.hypot(event.clientX - lastPointerX, event.clientY - lastPointerY)
-      if (dist > 2) touchWater(event.clientX, event.clientY, false)
+      touchWaterLine(lastPointerX, lastPointerY, x, y)
+    } else {
+      touchWater(x, y, false)
     }
 
-    lastPointerX = event.clientX
-    lastPointerY = event.clientY
+    lastPointerX = x
+    lastPointerY = y
+  }
+
+  function onPointerMove(event: PointerEvent) {
+    const events = typeof event.getCoalescedEvents === 'function' ? event.getCoalescedEvents() : [event]
+    for (const item of events) movePointer(item.clientX, item.clientY)
   }
 
   function onPointerDown(event: PointerEvent) {
+    lastPointerX = event.clientX
+    lastPointerY = event.clientY
     touchWater(event.clientX, event.clientY, true)
+  }
+
+  function onTouchMove(event: TouchEvent) {
+    const touch = event.touches[0]
+    if (touch) movePointer(touch.clientX, touch.clientY)
+  }
+
+  function onTouchStart(event: TouchEvent) {
+    const touch = event.touches[0]
+    if (!touch) return
+
+    lastPointerX = touch.clientX
+    lastPointerY = touch.clientY
+    touchWater(touch.clientX, touch.clientY, true)
   }
 
   function onPointerLeave() {
@@ -284,7 +321,12 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
     window.removeEventListener('resize', resize)
     window.removeEventListener('pointermove', onPointerMove)
     window.removeEventListener('pointerdown', onPointerDown)
+    window.removeEventListener('touchmove', onTouchMove)
+    window.removeEventListener('touchstart', onTouchStart)
     window.removeEventListener('pointerleave', onPointerLeave)
+    window.removeEventListener('pointerup', onPointerLeave)
+    window.removeEventListener('touchend', onPointerLeave)
+    window.removeEventListener('touchcancel', onPointerLeave)
 
     if (simTexture) gl.deleteTexture(simTexture)
     if (buffer) gl.deleteBuffer(buffer)
@@ -295,7 +337,12 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
   window.addEventListener('resize', resize)
   window.addEventListener('pointermove', onPointerMove, { passive: true })
   window.addEventListener('pointerdown', onPointerDown, { passive: true })
+  window.addEventListener('touchmove', onTouchMove, { passive: true })
+  window.addEventListener('touchstart', onTouchStart, { passive: true })
   window.addEventListener('pointerleave', onPointerLeave)
+  window.addEventListener('pointerup', onPointerLeave)
+  window.addEventListener('touchend', onPointerLeave)
+  window.addEventListener('touchcancel', onPointerLeave)
   raf = requestAnimationFrame(frame)
 
   return {
