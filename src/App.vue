@@ -64,18 +64,20 @@ void main(){
   float hb = h(vUv + vec2(0.0, e.y));
   vec2 grad = vec2(hr - hl, hb - ht);
 
-  float slope = length(grad) * uRefr;
-  float light = (grad.x + grad.y) * 2.45;
-  float spec = smoothstep(0.035, 0.16, light) * uLight;
-  float ring = smoothstep(0.012, 0.09, slope) * (1.0 - smoothstep(0.2, 0.42, slope));
-  float band = smoothstep(0.8, 1.0, sin(dot(vUv, vec2(1.3, 1.0)) * 2.6 - uTime * 0.2));
-  vec2 sc = vec2(0.5 + 0.22 * cos(uTime * 0.07), 0.36 + 0.18 * sin(uTime * 0.09));
-  float pool = 1.0 - smoothstep(0.0, 0.55, distance(vUv * vec2(1.0, 1.35), sc * vec2(1.0, 1.35)));
+    float slope = length(grad) * uRefr;
+    float light = (grad.x + grad.y) * 2.45;
+    float spec = smoothstep(0.026, 0.14, light) * uLight;
+    float trough = smoothstep(0.025, 0.13, -light) * uLight;
+    float ring = smoothstep(0.008, 0.075, slope) * (1.0 - smoothstep(0.18, 0.4, slope));
+    float band = smoothstep(0.78, 1.0, sin(dot(vUv, vec2(1.3, 1.0)) * 2.6 - uTime * 0.2));
+    vec2 sc = vec2(0.5 + 0.22 * cos(uTime * 0.07), 0.36 + 0.18 * sin(uTime * 0.09));
+    float pool = 1.0 - smoothstep(0.0, 0.55, distance(vUv * vec2(1.0, 1.35), sc * vec2(1.0, 1.35)));
 
-  vec3 water = vec3(0.62, 0.82, 0.96) * ring * 0.42;
-  vec3 shine = vec3(1.0, 0.98, 0.9) * (spec * 0.9 + band * 0.055 * uLight + pool * 0.06 * uLight);
-  float alpha = clamp(0.035 + ring * 0.18 + spec * 0.32 + band * 0.025 + pool * 0.025, 0.0, 0.58);
-  gl_FragColor = vec4(water + shine, alpha);
+    vec3 waterTint = vec3(0.25, 0.58, 0.9) * (ring * 0.62 + pool * 0.05 * uLight);
+    vec3 shadow = vec3(0.04, 0.16, 0.28) * (trough * 0.62 + ring * 0.2);
+    vec3 shine = vec3(1.0, 0.98, 0.88) * (spec * 1.15 + band * 0.075 * uLight + pool * 0.08 * uLight);
+    float alpha = clamp(0.055 + ring * 0.34 + spec * 0.46 + trough * 0.32 + band * 0.035 + pool * 0.035, 0.0, 0.72);
+    gl_FragColor = vec4(waterTint + shine + shadow, alpha);
 }`
 
   function shader(type: number, src: string) {
