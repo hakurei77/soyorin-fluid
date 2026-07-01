@@ -21,6 +21,7 @@
     "dev": "vite --config vite.dev.config.ts",
     "build": "npm run build:types && vite build",
     "build:types": "vue-tsc -p tsconfig.lib.json",
+    "build:extension": "vite build --config vite.extension.config.ts",
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
   },

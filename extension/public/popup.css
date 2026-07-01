@@ -1,0 +1,68 @@
+:root {
+  color: #f8fbff;
+  background: #0d121c;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body {
+  width: 300px;
+  margin: 0;
+}
+
+.popup {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  background:
+    radial-gradient(circle at top left, rgb(139 216 255 / 18%), transparent 42%),
+    #0d121c;
+}
+
+h1 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.controls {
+  display: grid;
+  gap: 12px;
+}
+
+.control {
+  display: grid;
+  grid-template-columns: 72px 1fr 40px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.control input {
+  width: 100%;
+  accent-color: #8bd8ff;
+}
+
+.control output {
+  color: #c7eaff;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.reset {
+  height: 32px;
+  color: #e8f7ff;
+  background: rgb(139 216 255 / 14%);
+  border: 1px solid rgb(139 216 255 / 28%);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.reset:hover {
+  background: rgb(139 216 255 / 22%);
+}

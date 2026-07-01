@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Soyorin Fluid",
+  "version": "0.1.1",
+  "description": "Add a WebGL water ripple effect to web pages.",
+  "permissions": ["storage"],
+  "action": {
+    "default_title": "Soyorin Fluid 设置",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

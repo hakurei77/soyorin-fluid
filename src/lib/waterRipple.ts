@@ -4,6 +4,7 @@ export interface WaterRippleOptions {
   clickRipple?: number
   maxDevicePixelRatio?: number
   gridWidth?: number
+  spreadSpeed?: number
 }
 
 export interface WaterRippleEffect {
@@ -87,6 +88,7 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
     light: options.light ?? 1,
     moveRipple: options.moveRipple ?? 0.6,
     clickRipple: options.clickRipple ?? 0.3,
+    spreadSpeed: options.spreadSpeed ?? 1,
   }
 
   let width = 1
@@ -298,7 +300,8 @@ export function createWaterRipple(canvas: HTMLCanvasElement, options: WaterRippl
       drop(2 + Math.random() * (nx - 4), 2 + Math.random() * (ny - 4), 2, 0.14)
     }
 
-    stepWater()
+    const steps = Math.max(1, Math.round(params.spreadSpeed))
+    for (let i = 0; i < steps; i++) stepWater()
     packSim()
 
     gl.clear(gl.COLOR_BUFFER_BIT)

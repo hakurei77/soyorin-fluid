@@ -73,6 +73,7 @@ createWaterRipple(canvas, {
   light: 1,
   moveRipple: 0.6,
   clickRipple: 0.3,
+  spreadSpeed: 1,
   maxDevicePixelRatio: 2,
   gridWidth: 160,
 })
@@ -83,6 +84,7 @@ createWaterRipple(canvas, {
 | `light` | `number` | `1` | 水波高光强度 |
 | `moveRipple` | `number` | `0.6` | 指针移动产生的水波强度 |
 | `clickRipple` | `number` | `0.3` | 点击产生的水波强度 |
+| `spreadSpeed` | `number` | `1` | 水波扩散速度，值越大扩散越快 |
 | `maxDevicePixelRatio` | `number` | `2` | 最大设备像素比，限制高清屏性能消耗 |
 | `gridWidth` | `number` | `160` | 模拟网格宽度，越大越细腻但性能消耗越高 |
 
@@ -108,6 +110,21 @@ interface WaterRippleEffect {
 
 - `resize()`：手动重新计算画布尺寸
 - `destroy()`：销毁动画、事件监听和 WebGL 资源
+
+## 浏览器插件
+
+项目也提供 Chrome / Edge 浏览器插件构建入口，会在网页上注入全屏水波纹效果。
+
+```bash
+npm run build:extension
+```
+
+构建完成后打开浏览器扩展管理页：
+
+1. Chrome 打开 `chrome://extensions/`，Edge 打开 `edge://extensions/`
+2. 开启「开发者模式」
+3. 点击「加载已解压的扩展程序」
+4. 选择项目下的 `extension-dist` 目录
 
 ## 发布到 npm
 
