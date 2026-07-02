@@ -4,9 +4,15 @@
   "version": "0.1.1",
   "description": "Add a WebGL water ripple effect to web pages.",
   "permissions": ["storage"],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
   "action": {
     "default_title": "Soyorin Fluid 设置",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
   },
   "content_scripts": [
     {
