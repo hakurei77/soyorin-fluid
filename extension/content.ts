@@ -27,7 +27,7 @@ const storageKey = 'options'
 const defaultOptions: RippleOptions = {
   light: 1,
   moveRipple: 0.04,
-  clickRipple: 0.8,
+  clickRipple: 0.2,
   spreadSpeed: 0.5,
   maxDevicePixelRatio: 2,
   gridWidth: 160,
